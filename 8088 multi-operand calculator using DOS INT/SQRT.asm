@@ -1,0 +1,451 @@
+.MODEL SMALL
+
+NUM_FORM_STACK MACRO                   ; SUPER IMPORTANT => IT WILL TAKE THE NUMBERS PUSHED TO THE STACK AND FORM THEM AS ONE & STORE IT IN DX REGISTER 
+LOCAL FINISH_1D , FINISH_2D ,FINISH_3D ,FINISH_4D, FINISH_5D , FINISH
+
+MOV BX , 1
+MOV DX , 0
+
+
+CMP CL , 1 
+JE FINISH_1D
+
+CMP CL , 2
+JE FINISH_2D
+
+CMP CL , 3
+JE FINISH_3D
+
+CMP CL , 4
+JE FINISH_4D
+
+CMP CL , 5
+JE FINISH_5D
+       
+       
+FINISH_1D:
+POP AX
+MOV DX , AX
+PUSH DX
+POP DX
+DEC CL
+JMP FINISH
+       
+              
+FINISH_2D:
+POP AX
+MUL BX
+ADD DX , AX
+POP AX
+PUSH DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+POP DX   
+MOV CL , 0
+JMP FINISH
+      
+      
+FINISH_3D:
+POP AX
+MUL BX
+ADD DX , AX
+POP AX
+PUSH DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+POP DX
+PUSH AX
+PUSH DX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+POP DX  
+MOV CL , 0
+JMP FINISH
+
+
+FINISH_4D:
+POP AX
+MUL BX
+ADD DX , AX
+POP AX
+PUSH DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+POP DX
+PUSH AX
+PUSH DX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP DX
+POP AX
+PUSH DX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+POP DX   
+MOV CL , 0
+JMP FINISH
+
+
+FINISH_5D:
+POP AX
+MUL BX
+ADD DX , AX
+POP AX
+PUSH DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+POP DX
+PUSH AX
+PUSH DX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP AX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP DX
+POP AX
+PUSH DX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX 
+MOV AX , 10
+MUL BX
+MOV BX , AX
+POP DX
+POP AX
+PUSH DX
+MOV DX , 0
+MUL BX
+POP DX
+ADD AX , DX
+PUSH AX
+POP DX   
+MOV CL , 0
+JMP FINISH
+
+FINISH:
+ENDM
+;///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+SQRT MACRO LOWER , UPPER
+
+
+
+CALCULATION:
+MOV AX , LOWER
+MOV DX , 0
+MOV BX , LOWER
+MUL BX
+CMP AX , UPPER
+JE DONE_PERFECT_SQUARE_NUM
+CMP AX , UPPER
+JA NOT_PERFECT_SQUARE_NUM
+INC LOWER
+JMP CALCULATION
+
+
+DONE_PERFECT_SQUARE_NUM:
+MOV AX , LOWER
+PRINT_NUMBER    ; CALL MACRO THAT PRINTS AX VALUE
+JMP SQRT_IS_DONE
+
+
+
+NOT_PERFECT_SQUARE_NUM:
+CMP DIGIT_COUNTER , 3
+JAE  MORE_THAN_2_D    
+   
+
+MOV BX , UPPER
+MOV AX , 100
+MUL BX
+MOV UPPER , AX
+
+CALCULATION_2:
+MOV AX , LOWER
+MOV DX , 0
+MOV BX , LOWER
+MUL BX
+CMP AX , UPPER
+JA PRINT_RESULT
+INC LOWER
+JMP CALCULATION_2
+
+
+
+PRINT_RESULT: 
+DEC LOWER
+MOV AX , LOWER
+MOV BX , 10
+MOV DX , 0
+DIV BX
+PRINT_NUMBER   ; CALL MACRO THAT PRINTS AX VALUE  
+
+MOV DL , '.'
+MOV AH , 02H
+INT 21H 
+
+MOV AX , LOWER
+MOV BX , 10
+MOV DX , 0
+DIV BX            
+MOV AX , DX
+PRINT_NUMBER 
+
+
+MOV AX , LOWER
+MOV DX , 0
+MOV BX , LOWER
+MUL BX
+ADD AX , UPPER
+MOV BX , LOWER
+ADD BX , BX
+MOV DX , 0
+DIV BX
+
+
+MOV AX , DX
+MOV BX , 10
+MOV DX , 0
+DIV BX
+ADD AX , DX       ;WE WANT THE OF OF THE REMINDER AND THE QUOTIENT AND FIND THE AVARGE OF IT 
+MOV BX , 2        
+MOV DX , 0             
+DIV BX            ; NOW WE HAVE THE LAST DECIMAL DIGIT OF THE FRACTION IN AX  
+PRINT_NUMBER      ; ALL WE NEED TO DO IS PRINT THE LAST DIGIT OF THE FRACTION
+JMP SQRT_IS_DONE 
+ 
+
+MORE_THAN_2_D:
+MOV BX , UPPER
+
+CALCULATION_MORE_THAN_2_D:
+MOV AX , LOWER
+MOV DX , 0
+MOV BX , LOWER
+MUL BX
+CMP AX , UPPER
+JA PRINT_RESULT_MORE_THAN_2_D
+INC LOWER
+JMP CALCULATION_MORE_THAN_2_D
+
+
+PRINT_RESULT_MORE_THAN_2_D:
+DEC LOWER
+MOV AX , LOWER
+MOV BX , 10
+MOV DX , 0
+DIV BX
+PRINT_NUMBER   ; CALL MACRO THAT PRINTS AX VALUE  
+
+
+MOV AX , LOWER
+MOV BX , 10
+MOV DX , 0
+DIV BX            
+MOV AX , DX
+PRINT_NUMBER 
+
+MOV DL , '.'
+MOV AH , 02H
+INT 21H 
+
+MOV AX , LOWER
+MOV DX , 0
+MOV BX , LOWER
+MUL BX
+ADD AX , UPPER
+MOV BX , LOWER
+ADD BX , BX
+MOV DX , 0
+DIV BX
+
+
+MOV AX , DX  
+PRINT_NUMBER      ; ALL WE NEED TO DO IS PRINT THE LAST TWO DIGIT OF THE FRACTION
+
+
+
+
+ 
+
+SQRT_IS_DONE:
+ENDM
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+PRINT MACRO STRING
+LOCAL PRINTING , PRINTED
+PUSH AX
+PUSH DX
+
+MOV SI , OFFSET STRING
+PRINTING:
+MOV DL , [SI]
+CMP DL , 00H
+JE PRINTED
+MOV AH , 02H
+INT 21H
+INC SI
+JMP PRINTING
+
+PRINTED:
+POP DX
+POP AX
+ENDM
+
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PRINTLINE MACRO
+MOV DL , 0AH
+MOV AH , 02H
+INT 21H
+ENDM
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+PRINT_NUMBER MACRO
+LOCAL STACKING , PRINT_
+  MOV CL , 0
+  STACKING:
+  MOV BX , 10
+  MOV DX , 0
+  DIV BX
+  PUSH DX
+  INC CL
+  CMP AX , 0
+  JE PRINT_
+  JMP STACKING
+
+
+  PRINT_:
+  MOV DH , 0
+  POP DX
+  MOV AH , 02H
+  ADD DL , 30H
+  INT 21H
+  DEC CL
+  CMP CL , 0
+  JA PRINT_
+ENDM
+;//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.DATA
+
+
+
+MSG1 DB "ENTER THE NUMBER:" , 0
+LOWER DW 2
+UPPER DW ?
+DIGIT_COUNTER DB 0
+
+.CODE 
+MOV AX , @DATA
+MOV DS , AX
+
+PRINT MSG1
+PRINTLINE
+
+MOV CL , 0
+
+
+INSERTION:
+MOV AH , 01H
+INT 21H
+
+CMP AL , '=' 
+JE C_RESULT
+
+CMP AL , '0'
+JB INSERTION
+
+CMP AL , '9'
+JA INSERTION
+
+PUSH_NUM:
+MOV AH , 0
+SUB AL , 30H
+PUSH AX
+INC CL
+ADD DIGIT_COUNTER , 1
+JMP INSERTION
+
+
+
+C_RESULT:
+NUM_FORM_STACK
+MOV UPPER , DX
+
+
+SQRT_CAL:
+CMP DX , 0
+JE ONE_ZERO_CONDITION
+CMP DX , 1
+JE ONE_ZERO_CONDITION
+
+SQRT LOWER , UPPER
+JMP DONE
+
+ONE_ZERO_CONDITION:
+MOV AX , DX
+PRINT_NUMBER
+
+
+DONE:
+.EXIT
+END
