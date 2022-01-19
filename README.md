@@ -9,4 +9,4 @@ Each Directory Has:
 </pre>
 
 ![1](https://www.intel.la/content/dam/www/public/us/en/images/photography-consumer/rwd/adobestock-rwd.jpg.rendition.intel.web.864.486.jpg)
-![](Images/microprocessors.jpg)
+![](Digital-Image-Processing-repo/Image%20processing%20program/Images/microprocessors.jpg)
