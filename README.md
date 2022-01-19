@@ -8,5 +8,4 @@ Each Directory Has:
    • The solution.
 </pre>
 
-![1](https://www.intel.la/content/dam/www/public/us/en/images/photography-consumer/rwd/adobestock-rwd.jpg.rendition.intel.web.864.486.jpg)
 ![](microprocessors.jpg)
